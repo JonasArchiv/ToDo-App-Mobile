@@ -1,15 +1,7 @@
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW
 import toga
-from toga import Button, TextInput, Label, Box, App
-
-
-def toggle_todo_item(widget):
-    item_label = widget.parent.children[1]
-    if widget.is_on:
-        item_label.style.text_decoration = 'line-through'
-    else:
-        item_label.style.text_decoration = 'none'
+from toga import Button, TextInput, Label, Box, App, Switch
 
 
 class ToDoApp(App):
@@ -34,11 +26,11 @@ class ToDoApp(App):
     def add_todo_item(self, widget):
         if self.todo_input.value:
             item_box = Box(style=Pack(direction=ROW, padding=5))
-
             item_label = Label(self.todo_input.value)
 
             item_checkbox = Switch()
-            item_checkbox.on_toggle = toggle_todo_item
+
+            item_checkbox.on_toggle = self.toggle_todo_item
 
             remove_button = Button('Remove', on_press=self.remove_todo_item)
             remove_button.style.padding_left = 10
@@ -50,8 +42,15 @@ class ToDoApp(App):
             self.todo_list_box.add(item_box)
             self.todo_input.value = ''
 
-    def remove_todo_item(self, widget):
+    def remove_todo_item(self, widget, **kwargs):
         self.todo_list_box.remove(widget.parent)
+
+    def toggle_todo_item(widget):
+        item_label = widget.parent.children[1]
+        if widget.is_on:
+            item_label.style.text_decoration = 'line-through'
+        else:
+            item_label.style.text_decoration = 'none'
 
 
 def main():
